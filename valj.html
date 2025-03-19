@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.typekit.net/tfe8loe.css">
+    <title>Svenska Frimärksguiden</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        a:visited {
+            color: black;
+        }
+
+        .title {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            font-family: 'My Soul', cursive;
+            font-size: 50px;
+            color: inherit;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        .title:hover {
+            transform: scale(1.05);
+        }
+
+        .menu-container {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            z-index: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            font-size: 40px;
+        }
+
+        .menu-text {
+            font-family: 'My Soul', cursive;
+            width: 120px;
+        }
+
+        .arrow-image {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .arrow-image.rotated {
+            transform: rotate(90deg);
+        }
+
+        .timeline, .categories {
+            display: none;
+            margin-top: 15px;
+            margin-left: 40px;
+            gap: 40px;
+            position: absolute;
+            left: 40px;
+            padding-right: 60px;
+            z-index: 2;
+        }
+
+        .timeline {
+            top: 160px;
+        }
+
+        .categories {
+            top: 260px;
+        }
+
+        .timeline.show, .categories.show {
+            display: flex;
+        }
+
+        .timeline-item, .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-year, .category-name {
+            font-family: "botanika-mono-web", monospace;
+            font-weight: 400;
+            font-size: 14px;
+            color: black;
+            margin-top: -10px;
+            margin-left: -35px;
+        }
+
+        .timeline-year:hover, .category-name:hover {
+            transform: scale(1.1);
+        }
+
+        .timeline-image, .category-image {
+            width: auto;
+            height: 120px;
+            object-fit: contain;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-image:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        .category-image:hover {
+            transform: scale(1.1);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+
+        .postcard-overlay {
+            width: 45vw;
+            height: 30vw;
+            background-color: white;
+            border: 1px solid black;
+            box-shadow: 5px 5px black;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .postcard-stamp {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            width: 18%;
+            height: 28%;
+            object-fit: contain;
+        }
+
+        .postcard-title {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            font-family: 'My Soul', cursive;
+            font-size: 23px;
+            color: black;
+        }
+
+        .postcard-vertical-line {
+            position: absolute;
+            left: 50%;
+            top: 5%;
+            bottom: 5%;
+            width: 1px;
+            background-color: black;
+        }
+
+        .postcard-horizontal-line {
+            position: absolute;
+            right: 5%;
+            width: 30%;
+            height: 1px;
+            background-color: black;
+        }
+
+        .postcard-line-1 { bottom: 15%; }
+        .postcard-line-2 { bottom: 30%; }
+        .postcard-line-3 { bottom: 45%; }
+
+        .postcard-content {
+            position: absolute;
+            left: 2%;
+            top: 15%;
+            width: 45%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            font-family: "botanika-mono-web", monospace;
+            font-weight: 400;
+            font-size: 1vw;
+            color: rgb(0, 0, 0);
+        }
+
+        .postcard-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .postcard-text {
+            position: absolute;
+            top: 5%;
+            right: 2%;
+            width: 45%;
+            padding: 10px;
+            font-family: "botanika-mono-web", monospace;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 0,9vw;
+            color: rgb(0, 0, 0);
+            line-height: 1.4;
+        }
+
+        .postcard-message-input {
+            position: absolute;
+            top: 35%;
+            left: 2%;
+            width: 45%;
+            padding: 20px;
+            font-family: "botanika-mono-web", monospace;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1vw;
+            color: rgb(0, 0, 0);
+            line-height: 1.4;
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            height: 30%;
+        }
+
+        .postcard-message-input::placeholder {
+            color: rgb(0, 0, 0);
+        }
+
+        .postcard-text-input {
+            position: absolute;
+            bottom: 50%;
+            right: 5%;
+            width: 30%;
+            padding: 5px;
+            border: none;
+            font-family: 'My Soul', cursive;
+            font-size: 1.5vw;
+            background: transparent;
+            outline: none;
+            color: rgb(0, 0, 0);
+        }
+
+        .postcard-text-input::placeholder {
+            color: rgb(0, 0, 0);
+        }
+
+        .download-button {
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            padding: 5px 10px;
+            background: none;
+            color: black;
+            border: none;
+            cursor: pointer;
+            font-family: 'My Soul', cursive;
+            font-size: 20px;
+            transition: opacity 0.2s ease;
+        }
+
+        .download-button:hover {
+            opacity: 0.7;
+        }
+
+
+        .menu-item:not(:first-child) {
+            transition: transform 0.2s ease;
+        }
+
+        .menu-item:not(:first-child).shifted {
+            transform: translateY(200px);
+        }
+
+        /* Add viewport-based scaling */
+        @media screen and (max-width: 768px) {
+            .title {
+                font-size: 40px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .menu-container {
+                top: 20px;
+                left: 20px;
+                gap: 30px;
+            }
+
+            .menu-item {
+                gap: 40px;
+                font-size: 30px;
+            }
+
+            .menu-text {
+                width: 90px;
+            }
+
+            .arrow-image {
+                width: 40px;
+                height: 40px;
+            }
+
+            .timeline, .categories {
+                margin-left: 20px;
+                gap: 20px;
+                left: 20px;
+                padding-right: 30px;
+            }
+
+            .timeline {
+                top: 120px;
+            }
+
+            .categories {
+                top: 200px;
+            }
+
+            .timeline-year, .category-name {
+                font-size: 14px;
+            }
+
+            .timeline-image, .category-image {
+                height: 90px;
+            }
+
+            .postcard-overlay {
+                width: 90vw;
+                height: 60vw;
+            }
+
+            .postcard-content {
+                font-size: 12px;
+                padding: 15px;
+            }
+
+            .postcard-text-input {
+                font-size: 16px;
+            }
+
+            .download-button {
+                font-size: 16px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .title {
+                font-size: 30px;
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .menu-container {
+                top: 15px;
+                left: 15px;
+                gap: 20px;
+            }
+
+            .menu-item {
+                gap: 20px;
+                font-size: 24px;
+            }
+
+            .menu-text {
+                width: 70px;
+            }
+
+            .arrow-image {
+                width: 20px;
+                height: 20px;
+            }
+
+            .timeline, .categories {
+                margin-left: 15px;
+                gap: 15px;
+                left: 15px;
+                padding-right: 20px;
+            }
+
+            .timeline {
+                top: 100px;
+            }
+
+            .categories {
+                top: 180px;
+            }
+
+            .timeline-year, .category-name {
+                font-size: 12px;
+            }
+
+            .timeline-image, .category-image {
+                height: 70px;
+            }
+
+            .postcard-overlay {
+                width: 95vw;
+                height: 65vw;
+            }
+
+            .postcard-content {
+                font-size: 10px;
+                padding: 10px;
+            }
+
+            .postcard-text-input {
+                font-size: 14px;
+            }
+
+            .download-button {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=My+Soul&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+    <a href="index.html">
+        <div class="title">Svenska Frimärksguiden</div>
+    </a>
+
+    <div class="overlay" id="overlay">
+        <div class="postcard-overlay" id="postcard-overlay">
+            <img src="" alt="Stamp" class="postcard-stamp" id="postcard-stamp">
+            <div class="postcard-vertical-line"></div>
+            <div class="postcard-horizontal-line postcard-line-1"></div>
+            <div class="postcard-horizontal-line postcard-line-2"></div>
+            <div class="postcard-horizontal-line postcard-line-3"></div>
+            <div class="postcard-content" id="postcard-content">
+                <!-- Content will be added here -->
+            </div>
+            <textarea class="postcard-message-input" placeholder="Skriv ditt meddelande här..." id="postcard-message"></textarea>
+            <input type="text" class="postcard-text-input" placeholder="Namn..." id="postcard-text">
+            <div class="postcard-title">Svenska Frimärksguiden</div>
+            <button class="download-button" onclick="downloadPostcard()">Ladda ner</button>
+        </div>
+    </div>
+
+    <div class="menu-container">
+        <div class="menu-item">
+            <span class="menu-text">Tidslinje</span>
+            <img src="pil.png" alt="arrow" class="arrow-image" id="timeline-arrow">
+        </div>
+        <div class="menu-item" id="kategori-item">
+            <span class="menu-text">Kategori</span>
+            <img src="pil.png" alt="arrow" class="arrow-image" id="category-arrow">
+        </div>
+        <div class="menu-item" id="pris-item">
+            <span class="menu-text">Pris</span>
+            <img src="pil.png" alt="arrow" class="arrow-image">
+        </div>
+    </div>
+
+    <div class="timeline" id="timeline">
+        <!-- Timeline items will be added here by JavaScript -->
+    </div>
+
+    <div class="categories" id="categories">
+        <!-- Category items will be added here by JavaScript -->
+    </div>
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+            const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQRtMduy743i1TSed8HpL6ox31ob43UBId63-TZscik1DDOe5xlzUPp7oqH0tpx32Lw2odD3wnwfEKb/pub?output=csv";
+
+            Papa.parse(csvUrl, {
+                download: true,
+                header: false,
+                complete: function(results) {
+                    renderTable(results.data);
+                }
+            });
+        });
+
+        // Handle timeline arrow specifically
+        const timelineArrow = document.getElementById('timeline-arrow');
+        const timeline = document.getElementById('timeline');
+        const kategoriItem = document.getElementById('kategori-item');
+        const prisItem = document.getElementById('pris-item');
+        let isTimelineVisible = false;
+
+        // Handle category arrow specifically
+        const categoryArrow = document.getElementById('category-arrow');
+        const categories = document.getElementById('categories');
+        let isCategoryVisible = false;
+
+        // Array of years in chronological order
+        const years = [
+            '1877', '1911', '1922', '1924', '1934', '1935', '1936', '1942',
+            '1945', '1949', '1954', '1961', '1963', '1969', '1973', '1974',
+            '1975', '1976', '1977', '1979', '1980', '1995', '1996', '1999',
+            '2001', '2008', '2010', '2025'
+        ];
+
+        // Array of categories
+        const categoryItems = [
+            { name: 'Ansikten', image: 'Ansikten.png', folder: 'Ansikten' },
+            { name: 'Natur', image: 'Natur.png', folder: 'Natur' },
+            { name: 'Illustrationer', image: 'illustrationer.png', folder: 'Illustrationer' },
+            { name: 'Infrastruktur', image: 'Infrastruktur.png', folder: 'Infrastruktur' },
+            { name: 'Post', image: 'Post.png', folder: 'Post' },
+            { name: 'Historia', image: 'Historia.png', folder: 'Historia' }
+        ];
+
+        timelineArrow.addEventListener('click', function() {
+            if (isTimelineVisible) {
+                this.classList.remove('rotated');
+                timeline.classList.remove('show');
+                kategoriItem.classList.remove('shifted');
+                prisItem.classList.remove('shifted');
+            } else {
+                closeAllColumns();
+                this.classList.add('rotated');
+                // Create and add timeline items if they don't exist
+                if (timeline.children.length === 0) {
+                    years.forEach(year => {
+                        const timelineItem = document.createElement('div');
+                        timelineItem.className = 'timeline-item';
+                        const yearLabel = document.createElement('div');
+                        yearLabel.className = 'timeline-year';
+                        yearLabel.textContent = year;
+                        const image = document.createElement('img');
+                        image.className = 'timeline-image';
+                        image.alt = `Stamp from ${year}`;
+                        image.style.opacity = '0';
+                        for (const category of categoryItems) {
+                            const testImage = new Image();
+                            testImage.onload = function() {
+                                image.src = `${category.folder}/${year}.png`;
+                                image.dataset.category = category.folder;
+                                image.style.opacity = '1';
+                            };
+                            testImage.onerror = function() {
+                                // Do nothing if image doesn't exist
+                            };
+                            testImage.src = `${category.folder}/${year}.png`;
+                        }
+                        image.addEventListener('click', function() {
+                            if (image.src && image.dataset.category) {
+                                showPostcard(year, image.dataset.category);
+                            }
+                        });
+                        timelineItem.appendChild(yearLabel);
+                        timelineItem.appendChild(image);
+                        timeline.appendChild(timelineItem);
+                    });
+                }
+                timeline.classList.add('show');
+                kategoriItem.classList.add('shifted');
+                prisItem.classList.add('shifted');
+            }
+            isTimelineVisible = !isTimelineVisible;
+        });
+
+        categoryArrow.addEventListener('click', function() {
+            if (isCategoryVisible) {
+                this.classList.remove('rotated');
+                categories.classList.remove('show');
+                prisItem.classList.remove('shifted');
+            } else {
+                closeAllColumns();
+                this.classList.add('rotated');
+                createCategoryLayout();
+                categories.classList.add('show');
+                prisItem.classList.add('shifted');
+            }
+            isCategoryVisible = !isCategoryVisible;
+        });
+
+        // Function to create the initial category layout
+        function createCategoryLayout() {
+            categories.innerHTML = ''; // Clear existing content
+                    categoryItems.forEach(category => {
+                        const categoryItem = document.createElement('div');
+                        categoryItem.className = 'category-item';
+                        
+                        const categoryLabel = document.createElement('div');
+                        categoryLabel.className = 'category-name';
+                        categoryLabel.textContent = category.name;
+                        
+                        const image = document.createElement('img');
+                        image.src = category.image;
+                        image.alt = category.name;
+                        image.className = 'category-image';
+                
+                // Add click handler for the category image
+                image.addEventListener('click', function() {
+                    showCategoryStamps(category.folder);
+                });
+                        
+                        categoryItem.appendChild(categoryLabel);
+                        categoryItem.appendChild(image);
+                        categories.appendChild(categoryItem);
+                    });
+                }
+
+        // Function to show stamps from a category folder
+        function showCategoryStamps(categoryFolder) {
+            categories.innerHTML = '';
+
+            // Create a title for the category
+            const categoryTitle = document.createElement('div');
+            categoryTitle.className = 'category-name';
+            categoryTitle.textContent = categoryFolder;
+            categoryTitle.style.cssText = `
+                position: absolute;
+                top: -30px;
+                left: 40px;
+                font-family: "botanika-mono-web", monospace;
+                font-size: 16px;
+                z-index: 3;
+            `;
+            // Add click handler to return to all category images
+            categoryTitle.addEventListener('click', function() {
+                createCategoryLayout(); // Call to show all categories again
+            });
+            categories.appendChild(categoryTitle);
+
+            // Add stamps from the category folder without year text
+            years.forEach(year => {
+                const image = new Image();
+                image.onload = function() {
+                    const stampItem = document.createElement('div');
+                    stampItem.className = 'category-item';
+                    
+                    const stampImage = document.createElement('img');
+                    stampImage.src = `${categoryFolder}/${year}.png`;
+                    stampImage.alt = `Stamp from ${year}`;
+                    stampImage.className = 'category-image';
+                    stampImage.style.opacity = '0';
+                    stampImage.onload = function() {
+                        stampImage.style.opacity = '1';
+                    };
+                    
+                    // Add click handler for the stamp image
+                    stampImage.addEventListener('click', function() {
+                        showPostcard(year, categoryFolder);
+                    });
+                    
+                    stampItem.appendChild(stampImage);
+                    categories.appendChild(stampItem);
+                };
+                image.onerror = function() {
+                    // Do nothing if image doesn't exist
+                };
+                image.src = `${categoryFolder}/${year}.png`;
+            });
+        }
+
+        function showPostcard(year, categoryFolder) {
+            const overlay = document.getElementById('overlay');
+            const postcard = document.getElementById('postcard-overlay');
+            const stamp = document.getElementById('postcard-stamp');
+            const content = document.getElementById('postcard-content');
+            
+            console.log('Showing postcard for year:', year, 'from category:', categoryFolder);
+            
+            // Set stamp image directly from the category folder
+            stamp.src = `${categoryFolder}/${year}.png`;
+            
+            // Get data from spreadsheet
+            const data = stampData[year];
+            console.log('Data for year:', year, data);
+            
+            if (data) {
+                postcard.style.backgroundColor = data.hexColor;
+                content.innerHTML = `
+                    <div class="postcard-info">
+                        <div>${data.pris}</div>
+                    </div>
+                    <div class="postcard-info">
+                        <div>${data.motiv}</div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = '<div>Ingen data tillgänglig</div>';
+                postcard.style.backgroundColor = '#DDDDDD';
+            }
+            
+            overlay.classList.add('show');
+        }
+
+        function closeOverlay() {
+            const overlay = document.getElementById('overlay');
+            const postcard = document.getElementById('postcard-overlay');
+            overlay.classList.remove('show');
+            // Reset background when closing
+            postcard.style.backgroundColor = 'white';
+        }
+
+        function downloadPostcard() {
+            const postcard = document.getElementById('postcard-overlay');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const stamp = document.getElementById('postcard-stamp');
+            
+            // Get the computed styles from the web view
+            const postcardStyles = window.getComputedStyle(postcard);
+            const contentStyles = window.getComputedStyle(document.getElementById('postcard-content'));
+            const messageStyles = window.getComputedStyle(document.getElementById('postcard-message'));
+            const nameStyles = window.getComputedStyle(document.getElementById('postcard-text'));
+            
+            // Set high resolution while maintaining aspect ratio
+            const scale = 4;
+            canvas.width = postcard.offsetWidth * scale;
+            canvas.height = postcard.offsetHeight * scale;
+            
+            // Scale everything proportionally
+            context.scale(scale, scale);
+            
+            const year = stamp.src.split('/').pop().split('.')[0];
+            
+            // Draw background
+            const data = stampData[year];
+            const backgroundColor = data && data.hexColor ? data.hexColor : '#DDDDDD';
+            context.fillStyle = backgroundColor;
+            context.fillRect(0, 0, canvas.width/scale, canvas.height/scale);
+            
+            // Draw border and lines
+            context.strokeStyle = 'black';
+            context.lineWidth = 1;
+            
+            // Draw border
+            context.strokeRect(0, 0, canvas.width/scale, canvas.height/scale);
+            
+            // Draw vertical line at exactly 50%
+            context.beginPath();
+            context.moveTo(canvas.width/(2*scale), canvas.height * 0.05/scale);
+            context.lineTo(canvas.width/(2*scale), canvas.height * 0.95/scale);
+            context.stroke();
+            
+            // Draw horizontal lines at exact positions
+            const linePositions = [0.15, 0.30, 0.45];
+            linePositions.forEach(pos => {
+                context.beginPath();
+                context.moveTo(canvas.width * 0.6/scale, canvas.height * (1 - pos)/scale);
+                context.lineTo(canvas.width * 0.95/scale, canvas.height * (1 - pos)/scale);
+                context.stroke();
+            });
+            
+            // Draw stamp maintaining exact proportions from web view
+            const stampRect = stamp.getBoundingClientRect();
+            const postcardRect = postcard.getBoundingClientRect();
+            const stampWidthRatio = stampRect.width / postcardRect.width;
+            const stampHeightRatio = stampRect.height / postcardRect.height;
+            const stampTopRatio = 0.05;
+            const stampRightRatio = 0.05;
+            
+            context.drawImage(stamp,
+                (canvas.width/scale) * (1 - stampWidthRatio - stampRightRatio),
+                (canvas.height/scale) * stampTopRatio,
+                (canvas.width/scale) * stampWidthRatio,
+                (canvas.width/scale) * stampWidthRatio * (stamp.naturalHeight / stamp.naturalWidth)
+            );
+            
+            // Draw title matching web view size
+            const titleSize = parseFloat(postcardStyles.fontSize) / postcard.offsetHeight;
+            const titleFont = titleSize * canvas.height/scale * 1.2; // Increase title size by 20%
+            context.font = `${titleFont}px "My Soul"`;
+            context.fillStyle = 'black';
+            context.fillText("Svenska Frimärksguiden", canvas.width * 0.05/scale, canvas.height * 0.08/scale);
+            
+            
+            if (data) {
+                const contentSize = parseFloat(contentStyles.fontSize) / postcard.offsetHeight;
+                const contentFont = contentSize * canvas.height/scale;
+                context.font = `${contentFont}px "botanika-mono-web"`;
+                context.fillStyle = 'black';
+                
+                function wrapText(text, maxWidth, startY) {
+                    let currentLine = '';
+                    const words = text.split(' ');
+                    let yPos = startY;
+                    const lineHeight = contentFont * 1.6;
+                    
+                    words.forEach((word, wordIndex) => {
+                        const testLine = currentLine + (wordIndex === 0 ? '' : ' ') + word;
+                        const metrics = context.measureText(testLine);
+                        
+                        if (metrics.width > maxWidth) {
+                            context.fillText(currentLine, canvas.width * 0.05/scale, canvas.height * yPos/scale);
+                            currentLine = word;
+                            yPos += lineHeight/(canvas.height/scale);
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    
+                    if (currentLine) {
+                        context.fillText(currentLine, canvas.width * 0.05/scale, canvas.height * yPos/scale);
+                    }
+                    return yPos + lineHeight/(canvas.height/scale);
+                }
+                
+                const maxWidth = canvas.width * 0.43/scale;
+                let currentY = 0.15;
+                currentY = wrapText(data.pris, maxWidth, currentY);
+                currentY += 0.03;
+                wrapText(data.motiv, maxWidth, currentY);
+            }
+            
+            // Draw message matching web view exactly
+            const messageInput = document.getElementById('postcard-message');
+            if (messageInput.value) {
+                const messageSize = parseFloat(messageStyles.fontSize) / postcard.offsetHeight;
+                const messageFont = messageSize * canvas.height/scale;
+                context.font = `${messageFont}px "botanika-mono-web"`;
+                context.fillStyle = 'black';
+                
+                const lines = messageInput.value.split('\n');
+                const startY = 0.35;
+                const maxWidth = canvas.width * 0.43/scale;
+                const lineHeight = messageFont * 1.4;
+                
+                lines.forEach((line, index) => {
+                    let currentLine = '';
+                    const words = line.split(' ');
+                    let yPos = startY + (index * lineHeight/(canvas.height/scale));
+                    
+                    words.forEach((word, wordIndex) => {
+                        const testLine = currentLine + (wordIndex === 0 ? '' : ' ') + word;
+                        const metrics = context.measureText(testLine);
+                        
+                        if (metrics.width > maxWidth) {
+                            context.fillText(currentLine, canvas.width * 0.05/scale, canvas.height * yPos/scale);
+                            currentLine = word;
+                            yPos += lineHeight/(canvas.height/scale);
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    
+                    if (currentLine) {
+                        context.fillText(currentLine, canvas.width * 0.05/scale, canvas.height * yPos/scale);
+                    }
+                });
+            }
+            
+            // Draw name matching web view exactly
+            const textInput = document.getElementById('postcard-text');
+            if (textInput.value) {
+                const nameSize = parseFloat(nameStyles.fontSize) / postcard.offsetHeight;
+                const nameFont = nameSize * canvas.height/scale;
+                context.font = `${nameFont}px "My Soul"`;
+                context.fillStyle = 'black';
+                context.fillText(textInput.value, canvas.width * 0.65/scale, canvas.height * 0.52/scale);
+            }
+            
+            // Create download with maximum quality
+            const imageData = canvas.toDataURL('image/png', 1.0);
+            const link = document.createElement('a');
+            link.download = 'svenska-frimarksguiden-postkort.png';
+            link.href = imageData;
+            link.click();
+        }
+
+        // Update overlay click handler
+        const overlay = document.getElementById('overlay');
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeOverlay();
+            }
+        });
+    </script>
+    <script>
+        let stampData = {}; // Store the spreadsheet data
+
+        function renderTable(data) {
+            console.log('Raw data:', data); // Debug log
+            // Skip header row and store data
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                console.log('Processing row:', row); // Debug log
+                if (row[0]) { // If year exists
+                    const year = row[0].trim(); // Remove any whitespace
+                    console.log('Processing year:', year); // Debug log
+                    
+                    // Debug raw hex value from column F
+                    const rawHexColor = row[5] || '';
+                    console.log(`Raw hex color for ${year}:`, rawHexColor);
+                    
+                    // Ensure hex color has # prefix if it doesn't already
+                    let hexColor = rawHexColor.trim();
+                    if (hexColor && !hexColor.startsWith('#')) {
+                        hexColor = '#' + hexColor;
+                    }
+                    
+                    // Validate hex color format using regex and fallback to default if invalid
+                    const isValidHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hexColor);
+                    if (!hexColor || !isValidHex) {
+                        console.log(`Invalid hex color for ${year}, using default color`);
+                        hexColor = '#DDDDDD'; // Light gray fallback
+                    } else {
+                        // Lighten the hex color by 20%
+                        hexColor = lightenColor(hexColor, 0.2);
+                        console.log(`Lightened hex color for ${year}:`, hexColor);
+                    }
+                    
+                    console.log(`Final hex color for ${year}:`, hexColor);
+                    
+                    stampData[year] = {
+                        pris: row[1] ? row[1].trim() : '',
+                        motiv: row[2] ? row[2].trim() : '',
+                        hexColor: hexColor
+                    };
+                    console.log('Added data for year:', year, stampData[year]); // Debug log
+                }
+            }
+            console.log('Final stamp data:', stampData); // Debug log
+        }
+
+        // Function to lighten a hex color
+        function lightenColor(hex, amount) {
+            // Convert hex to RGB
+            let r = parseInt(hex.substring(1, 3), 16);
+            let g = parseInt(hex.substring(3, 5), 16);
+            let b = parseInt(hex.substring(5, 7), 16);
+            
+            // Lighten colors
+            r = Math.min(255, Math.floor(r + (255 - r) * amount));
+            g = Math.min(255, Math.floor(g + (255 - g) * amount));
+            b = Math.min(255, Math.floor(b + (255 - b) * amount));
+            
+            // Convert back to hex
+            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        }
+
+        function getDominantColors(image) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                
+                context.drawImage(image, 0, 0);
+                
+                // Get image data
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                
+                // Create color frequency map
+                const colorMap = new Map();
+                
+                // Sample every 8th pixel for better performance
+                for (let i = 0; i < data.length; i += 32) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    
+                    // Skip grayscale colors (where r, g, and b are similar)
+                    const maxDiff = Math.max(Math.abs(r - g), Math.abs(g - b), Math.abs(r - b));
+                    if (maxDiff < 15) continue;
+                    
+                    // Skip very dark colors
+                    const brightness = (r + g + b) / 3;
+                    if (brightness < 20) continue;
+                    
+                    // Calculate saturation (0-1)
+                    const max = Math.max(r, g, b);
+                    const min = Math.min(r, g, b);
+                    const saturation = max === 0 ? 0 : (max - min) / max;
+                    
+                    // Calculate primary-ness (how close to a primary color)
+                    const redPrimary = Math.max(0, r - Math.max(g, b));
+                    const greenPrimary = Math.max(0, g - Math.max(r, b));
+                    const bluePrimary = Math.max(0, b - Math.max(r, g));
+                    const primaryness = Math.max(redPrimary, greenPrimary, bluePrimary) / 255;
+                    
+                    const key = `${Math.round(r/10)*10},${Math.round(g/10)*10},${Math.round(b/10)*10}`;
+                    const value = {
+                        count: (colorMap.get(key)?.count || 0) + 1,
+                        brightness: brightness,
+                        saturation: saturation,
+                        primaryness: primaryness,
+                        color: [r, g, b]
+                    };
+                    colorMap.set(key, value);
+                }
+                
+                // Find the most saturated primary-like color
+                let bestColor = null;
+                let maxScore = 0;
+                
+                for (const [_, data] of colorMap.entries()) {
+                    // Weight saturation and primaryness more heavily than frequency
+                    // This will prefer vibrant, pure colors over dull ones
+                    const score = data.count * 0.2 + data.saturation * 3 + data.primaryness * 2;
+                    if (score > maxScore) {
+                        maxScore = score;
+                        bestColor = data.color;
+                    }
+                }
+                
+             
+                if (!bestColor) {
+                    bestColor = [255, 255, 255];
+                }
+                
+                // Return as RGB string
+                resolve([`rgb(${bestColor.join(',')})`]);
+            });
+        }
+    </script>
+    <script>
+        const prisArrow = document.getElementById('pris-item').querySelector('.arrow-image');
+        let isPrisVisible = false;
+
+        prisArrow.addEventListener('click', function() {
+            if (isPrisVisible) {
+                this.classList.remove('rotated');
+                const stampsContainer = document.getElementById('stamps-container');
+                if (stampsContainer) {
+                    stampsContainer.remove();
+                }
+            } else {
+                closeAllColumns();
+                this.classList.add('rotated');
+                displayStampsByPrice();
+            }
+            isPrisVisible = !isPrisVisible;
+        });
+
+        function displayStampsByPrice() {
+            const existingContainer = document.getElementById('stamps-container');
+            if (existingContainer) {
+                existingContainer.remove();
+            }
+
+            const stampsContainer = document.createElement('div');
+            stampsContainer.id = 'stamps-container';
+            stampsContainer.style.display = 'flex';
+            stampsContainer.style.flexDirection = 'column';
+            stampsContainer.style.position = 'relative';
+            stampsContainer.style.gap = '20px';
+
+            // Convert prices to a consistent format (öre) and filter out 'okänt'
+            const stampsWithPrices = Object.entries(stampData).map(([year, data]) => {
+                let priceInOre = 0;
+                if (data.pris.includes('kr')) {
+                    priceInOre = parseFloat(data.pris) * 100;
+                } else if (data.pris.includes('öre')) {
+                    priceInOre = parseFloat(data.pris);
+                }
+                return { year, priceInOre, pris: data.pris };
+            }).filter(stamp => stamp.pris.toLowerCase() !== 'okänt');
+
+            // Sort stamps by price
+            stampsWithPrices.sort((a, b) => a.priceInOre - b.priceInOre);
+
+
+            const minSize = 50;
+            const maxSize = window.innerWidth * 0.5;
+            const minPrice = stampsWithPrices[0].priceInOre;
+            const maxPrice = stampsWithPrices[stampsWithPrices.length - 1].priceInOre;
+
+
+            const loadedStamps = new Map();
+
+
+            stampsWithPrices.forEach(stamp => {
+                const stampItem = document.createElement('div');
+                stampItem.className = 'category-item';
+                stampItem.dataset.year = stamp.year;
+                stampItem.dataset.price = stamp.priceInOre;
+                
+
+                const size = minSize + ((stamp.priceInOre - minPrice) / (maxPrice - minPrice)) * (maxSize - minSize);
+
+                let foundImage = false;
+                categoryItems.forEach(category => {
+                    if (!foundImage) {
+                        const stampImage = new Image();
+                        stampImage.onload = function() {
+                            if (!foundImage) {
+                                foundImage = true;
+                                const stampImg = document.createElement('img');
+                                stampImg.src = `${category.folder}/${stamp.year}.png`;
+                                stampImg.alt = `Stamp from ${stamp.year}`;
+                                stampImg.className = 'category-image';
+                                stampImg.style.width = `${size}px`;
+                                stampImg.style.height = 'auto';
+                        
+                                stampImg.addEventListener('click', function() {
+                                    showPostcard(stamp.year, category.folder);
+                                });
+
+                                stampItem.appendChild(stampImg);
+                                loadedStamps.set(stamp.year, {
+                                    element: stampItem,
+                                    price: stamp.priceInOre
+                                });
+
+                                const sortedStamps = Array.from(loadedStamps.values())
+                                    .sort((a, b) => a.price - b.price);
+
+                                stampsContainer.innerHTML = '';
+                                sortedStamps.forEach(stamp => {
+                                    stampsContainer.appendChild(stamp.element);
+                                });
+                            }
+                        };
+                        stampImage.src = `${category.folder}/${stamp.year}.png`;
+                    }
+                });
+            });
+
+            // Allow vertical scrolling
+            const scrollableContainer = document.createElement('div');
+            scrollableContainer.style.overflowY = 'scroll';
+            scrollableContainer.style.height = '100vh';
+            scrollableContainer.style.position = 'fixed';
+            scrollableContainer.style.top = '0';
+            scrollableContainer.style.left = '0';
+            scrollableContainer.style.right = '0';
+            scrollableContainer.style.bottom = '0';
+            scrollableContainer.style.paddingTop = '100px';
+            scrollableContainer.appendChild(stampsContainer);
+            document.body.appendChild(scrollableContainer);
+        }
+    </script>
+    <script>
+        function closeAllColumns() {
+            if (isTimelineVisible) {
+                timelineArrow.classList.remove('rotated');
+                isTimelineVisible = false;
+                timeline.classList.remove('show');
+                kategoriItem.classList.remove('shifted');
+                prisItem.classList.remove('shifted');
+            }
+            if (isCategoryVisible) {
+                categoryArrow.classList.remove('rotated');
+                isCategoryVisible = false;
+                categories.classList.remove('show');
+                prisItem.classList.remove('shifted');
+            }
+            if (isPrisVisible) {
+                prisArrow.classList.remove('rotated');
+                isPrisVisible = false;
+                const stampsContainer = document.getElementById('stamps-container');
+                if (stampsContainer) {
+                    stampsContainer.remove();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

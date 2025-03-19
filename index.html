@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svenska Frimärksguiden</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="https://use.typekit.net/tfe8loe.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        a:visited {
+            color: black;
+        }
+
+        .title {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-family: 'My Soul', cursive;
+            font-size: 50px;
+            color: inherit;
+        }
+
+        .inf {
+            position: absolute;
+            width: 300px;
+            top: 120px;
+            left: 10px;
+            font-family: "botanika-mono-web", monospace;
+            font-weight: 400;
+            font-style: normal;     
+           /* font-style: italic; */
+            font-size: 13px;
+            color: inherit;
+            line-height: 1.4;
+        }
+
+        .postcard {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 45vw;
+            height: 30vw;
+            border: 1px solid black;
+            box-shadow: 5px 5px black;
+            background-color: white;
+        }
+
+        .stamp {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            width: 13%;
+            height: 20%;
+            background-color: rgb(255, 89, 0);
+            border: 1px solid black;
+        }
+
+        .stamp:hover {
+            transform: scale(1.1);
+        }
+
+        .vertical-line {
+            position: absolute;
+            left: 50%;
+            top: 5%;
+            bottom: 5%;
+            width: 1px;
+            background-color: black;
+        }
+
+        .horizontal-line {
+            position: absolute;
+            right: 5%;
+            width: 30%;
+            height: 1px;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .line-1 {
+            bottom: 15%;
+        }
+
+        .line-2 {
+            bottom: 30%;
+        }
+
+        .line-3 {
+            bottom: 45%;
+        }
+
+        .postcard-text {
+            position: absolute;
+            top: 5%;
+            left: 3%;
+            width: 40%;
+            padding: 20px;
+            font-family: "botanika-mono-web", monospace;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1vw;
+            color: rgb(0, 0, 0);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) { /* Mobile view */
+    .postcard {
+        width: 90vw; /* Scale to 90% of screen width */
+        height: 60vw; /* Maintain aspect ratio */
+        position: absolute; /* Position relative to viewport */
+        bottom: 12%; /* Move slightly up */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Correct centering */
+    }
+
+    .postcard-text {
+        font-size: 2.4vw; /* Scale text size */
+        width: 43%;
+        position: absolute;
+        top: 10%;
+        left: 1%;
+    }
+
+    .stamp {
+        width: 18%;
+        height: auto;
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        aspect-ratio: 1 / 1;
+    }
+
+    .vertical-line {
+        left: 50%;
+        top: 5%;
+        bottom: 5%;
+        width: 1px;
+        background-color: black;
+        position: absolute;
+    }
+
+    .horizontal-line {
+        right: 5%;
+        width: 30%;
+        height: 1px;
+        background-color: black;
+        position: absolute;
+    }
+
+    .line-1 {
+        bottom: 15%;
+    }
+
+    .line-2 {
+        bottom: 30%;
+    }
+
+    .line-3 {
+        bottom: 45%;
+    }
+}
+
+        
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=My+Soul&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a href="index.html">
+        <div class="title">Svenska Frimärksguiden</div>
+    </a>
+
+    <div class="postcard">
+        <a href="valj.html">
+            <div class="stamp"></div>
+        </a>
+        <div class="vertical-line"></div>
+        <div class="horizontal-line line-1"></div>
+        <div class="horizontal-line line-2"></div>
+        <div class="horizontal-line line-3"></div>
+        <div class="postcard-text">
+            Svenska Frimärksguiden är ett arkiv av svenska frimärken från de senaste hundra åren taget från Postmuseets samling. Bläddra mellan olika frimärken, skriv ett meddelande, ladda ner och skicka iväg!
+        </div>
+    </div>
+</body>
+</html>
